@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9">
+    <title>ModulBank_Test</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+          crossorigin="anonymous">
+
+    <link rel="stylesheet" href="index.css">
+    <!-- Load jQuery -->
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <!-- Load JsRender latest version, from www.jsviews.com: -->
+    <script src="//www.jsviews.com/download/jsrender.js"></script>
+    <script src="index.js"></script>
+</head>
+<body>
+
+
+<div id="container"></div>
+
+<script id="templateOne" type="text/x-jsrender">
+<h3>{{>Report.ShortNameRus}}({{>Report.ShortNameEn}})</h3> <br>
+<div class="container">
+
+    <div class="row border rounded">
+        <div class="col text-right">Полное наименование</div>
+        <div class="col">
+            {{>Report.FullNameRus}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Сокращенное наименование</div>
+        <div class="col">
+            {{>Report.ShortNameRus}}({{>Report.ShortNameEn}})
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Уставный капитал</div>
+        <div class="col">
+            {{>Report.CharterCapital}}
+        </div>
+    </div>
+
+     <div class="row border rounded">
+        <div class="col text-right">Диапазон численности работников</div>
+        <div class="col">
+            {{>Report.WorkersRange}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Юридический адрес</div>
+        <div class="col">
+            {{>Report.LegalAddresses.Address["@PostCode"]}}, {{>Report.LegalAddresses.Address["@Address"]}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Фактический адрес</div>
+        <div class="col">
+            {{>Report.AdjustAddress["@PostCode"]}}, {{>Report.AdjustAddress["@Address"]}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">ИНН/КПП</div>
+        <div class="col">
+            {{>Report.INN}}/{{>Report.KPP}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">ОГРН/ОКПО</div>
+        <div class="col">
+            {{>Report.OGRN}}/{{>Report.OKPO}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">ОКАТО</div>
+        <div class="col">
+            {{>Report.OKATO["@Code"]}}<br>
+            <span class="comment">(Регион: {{>Report.OKATO["@RegionName"]}}, код региона: {{>Report.OKATO["@RegionCode"]}})</span>
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">OKOGU</div>
+        <div class="col">
+            {{>Report.OKOGU["@Code"]}}<br>
+            <span class="comment">({{>Report.OKOGU["@Name"]}})</span>
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">OKFS</div>
+        <div class="col">
+            {{>Report.OKFS["@Code"]}} <br>
+            <span class="comment">({{>Report.OKFS["@Name"]}})</span>
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">OKOPF</div>
+        <div class="col">
+            {{>Report.OKOPF["@Code"]}} ({{>Report.OKOPF["@CodeNew"]}}) <br>
+            <span class="comment">({{>Report.OKFS["@Name"]}})</span>
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">OKVEDList</div>
+        <div class="col">
+            {{>Report.OKVEDList[0]["@Code"]}} <br>
+            ({{>Report.OKVEDList[0]["@Name"]}}, осн.) <br>
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                View all
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+                            {{for Report.OKVEDList}}
+                                ({{:#view.data["@Code"]}})
+                                <span class="comment">({{:#view.data["@Name"]}}) </span>
+                                <span class="comment">{{:#view.data["@IsMain"]}}</span> <br> <br>
+                                {{props}}
+                                    {{if key === '@IsMain'}}
+                                        <span class="comment">(осн.)</span>
+                                    {{/if}}
+                                {{/props}}
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Список телефонов</div>
+        <div class="col">
+            ({{>Report.PhoneList[0]["@Code"]}}) {{>Report.PhoneList[0]["@Number"]}} <br>
+            ({{>Report.PhoneList[1]["@Code"]}}) {{>Report.PhoneList[1]["@Number"]}} <br>
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                View all
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="card-body">
+                            {{for Report.PhoneList}}
+                                ({{:#view.data["@Code"]}}) {{:#view.data["@Number"]}} <br>
+                                <span class="comment">{{:#view.data["@Status"]}}</span> <br> <br>
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Факс:</div>
+        <div class="col">
+            ({{>Report.FaxList[0]["@Code"]}}) {{>Report.PhoneList[0]["@Number"]}} <br>
+            ({{>Report.FaxList[1]["@Code"]}}) {{>Report.PhoneList[1]["@Number"]}} <br>
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                View all
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                        <div class="card-body">
+                            {{for Report.FaxList}}
+                                 ({{:#view.data["@Code"]}}) {{:#view.data["@Number"]}} <br>
+                                 <span class="comment">{{:#view.data["@Status"]}}</span> <br> <br>
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Email</div>
+        <div class="col">
+            {{>Report.Email}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Сайт</div>
+        <div class="col">
+            {{>Report.Www}}
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row border rounded">
+        <div class="col text-right">Список руководителей</div>
+        <div class="col">
+            {{for Report.LeaderList}}
+                 Дата: ({{:#view.data["@ActualDate"]}}) <br>
+                 ФИО: {{:#view.data["@FIO"]}} <br>
+                 <span class="comment">{{:#view.data["@Position"]}}</span> <br> <br>
+            {{/for}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Финансовая отчетность</div>
+        <div class="col">
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingFour">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                {{>Report.Finance.FinPeriod[0]["@PeriodName"]}}
+                                (<span class="comment">{{>Report.Finance.FinPeriod[0]["@DateBegin"]}} - {{>Report.Finance.FinPeriod[0]["@DateEnd"]}}</span>)
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                        <div class="card-body">
+                            {{for Report.Finance.FinPeriod[0].StringList}}
+                                {{:#view.data["@Form"]}}
+                                {{:#view.data["@Section"]}} <br>
+                                {{:#view.data["@Name"]}} <br>
+                                <span class="comment">Код: {{:#view.data["@Code"]}}</span> <br>
+                                <span class="comment">Сумма: {{:#view.data["@Value"]}}</span> <br>
+                                <span class="comment">ID фин.пок.: {{:#view.data["@IdFinPok"]}}</span> <br> <br>
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingFive">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                                {{>Report.Finance.FinPeriod[1]["@PeriodName"]}}
+                                (<span class="comment">{{>Report.Finance.FinPeriod[1]["@DateBegin"]}} - {{>Report.Finance.FinPeriod[1]["@DateEnd"]}}</span>)
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                        <div class="card-body">
+                            {{for Report.Finance.FinPeriod[1].StringList}}
+                                {{:#view.data["@Form"]}}
+                                {{:#view.data["@Section"]}} <br>
+                                {{:#view.data["@Name"]}} <br>
+                                <span class="comment">Код: {{:#view.data["@Code"]}}</span> <br>
+                                <span class="comment">Сумма: {{:#view.data["@Value"]}}</span> <br>
+                                <span class="comment">ID фин.пок.: {{:#view.data["@IdFinPok"]}}</span> <br> <br>
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingSix">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                                {{>Report.Finance.FinPeriod[2]["@PeriodName"]}}
+                                (<span class="comment">{{>Report.Finance.FinPeriod[2]["@DateBegin"]}} - {{>Report.Finance.FinPeriod[2]["@DateEnd"]}}</span>)
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
+                        <div class="card-body">
+                            {{for Report.Finance.FinPeriod[2].StringList}}
+                                {{:#view.data["@Form"]}}
+                                {{:#view.data["@Section"]}} <br>
+                                {{:#view.data["@Name"]}} <br>
+                                <span class="comment">Код: {{:#view.data["@Code"]}}</span> <br>
+                                <span class="comment">Сумма: {{:#view.data["@Value"]}}</span> <br>
+                                <span class="comment">ID фин.пок.: {{:#view.data["@IdFinPok"]}}</span> <br> <br>
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingSeven">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
+                                {{>Report.Finance.FinPeriod[3]["@PeriodName"]}}
+                                (<span class="comment">{{>Report.Finance.FinPeriod[3]["@DateBegin"]}} - {{>Report.Finance.FinPeriod[3]["@DateEnd"]}}</span>)
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion">
+                        <div class="card-body">
+                            {{for Report.Finance.FinPeriod[3].StringList}}
+                                {{:#view.data["@Form"]}}
+                                {{:#view.data["@Section"]}} <br>
+                                {{:#view.data["@Name"]}} <br>
+                                <span class="comment">Код: {{:#view.data["@Code"]}}</span> <br>
+                                <span class="comment">Сумма: {{:#view.data["@Value"]}}</span> <br>
+                                <span class="comment">ID фин.пок.: {{:#view.data["@IdFinPok"]}}</span> <br> <br>
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingEight">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
+                                {{>Report.Finance.FinPeriod[4]["@PeriodName"]}}
+                                (<span class="comment">{{>Report.Finance.FinPeriod[4]["@DateBegin"]}} - {{>Report.Finance.FinPeriod[4]["@DateEnd"]}}</span>)
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordion">
+                        <div class="card-body">
+                            {{for Report.Finance.FinPeriod[4].StringList}}
+                                {{:#view.data["@Form"]}}
+                                {{:#view.data["@Section"]}} <br>
+                                {{:#view.data["@Name"]}} <br>
+                                <span class="comment">Код: {{:#view.data["@Code"]}}</span> <br>
+                                <span class="comment">Сумма: {{:#view.data["@Value"]}}</span> <br>
+                                <span class="comment">ID фин.пок.: {{:#view.data["@IdFinPok"]}}</span> <br> <br>
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Доступные финансовые сведения</div>
+        <div class="col">
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingNine">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
+                                Показать
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordion">
+                        <div class="card-body">
+                            {{for Report.AccessibleFinData}}
+                                 ID периода: {{:#view.data["@IDPeriod"]}} <br>
+                                 Период: {{:#view.data["@Name"]}} <br>
+                                 <span class="comment">Дата окончания: ({{:#view.data["@EndDate"]}})</span> <br> <br>
+                            {{/for}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Таблица директоров ({{>Report.ExecutiveBody["@ActualDate"]}})</div>
+        <div class="col">
+            {{for Report.ExecutiveBody.Member}}
+
+                 ФИО: {{:Name}} <br>
+                 {^{if INN}}
+                    ИНН: {{:INN}} <br>
+                 {{else}}
+                 {{/if}}
+
+                 Год рождения: {{:#view.data["BirthdayYear"]}} <br>
+                 {{>Position["@Name"]}} ({{>Position["@Code"]}}) <br>
+                 Доля: {{>SharePart}} <br> <br>
+            {{/for}}
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <div class="row border rounded">
+        <div class="col text-right">Перечни</div>
+        <div class="col">
+            {{>Report.IncludeInList}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Кредитные риски</div>
+        <div class="col">
+            {{>Report.CreditRisk["@CreditRiskValue"]}} ({{>Report.CreditRisk["@CreditRiskDesc"]}})
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Оценка отказов</div>
+        <div class="col">
+            {{>Report.FailureScore["@FailureScoreValue"]}} ({{>Report.CreditRisk["@FailureScoreDesc"]}})
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Индекс оплаты</div>
+        <div class="col">
+            {{>Report.PaymentIndex["@PaymentIndexValue"]}} ({{>Report.PaymentIndex["@PaymentIndexDesc"]}})
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Федеральная налоговая служба</div>
+        <div class="col">
+            Дата регистрации: {{>Report.FederalTaxRegistration.RegDate}}
+            Зарегистрировавший орган: {{>Report.FederalTaxRegistration.RegAuthority}}
+            Адрес: {{>Report.FederalTaxRegistration.RegAuthorityAddress}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">Структурные данные</div>
+        <div class="col">
+            {{props Report.StructureInfo}}
+                {{>key}} : {{>prop}} <br>
+            {{/props}}
+        </div>
+    </div>
+
+    <div class="row border rounded">
+        <div class="col text-right">IsActing</div>
+        <div class="col">
+            {^{if Report.IsActing}}Да{{else}}Нет{{/if}}
+        </div>
+    </div>
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous">
+</script>
+</body>
+</html>
